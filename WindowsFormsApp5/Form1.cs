@@ -29,6 +29,7 @@ namespace WindowsFormsApp5
         static string progs_inf = Application.StartupPath + "\\list_progs" + ".txt";
         static string in_inf = Application.StartupPath + "\\Progs_to" + ".txt";
         static string out_inf = Application.StartupPath + "\\CheckResult_ofprogs" + ".txt";
+        static string starter_pack = Application.StartupPath + "\\starter_pack" + ".txt";
         private static int found = Application.StartupPath.IndexOf("\\bin\\Debug");
         private static string strCoreData = Application.StartupPath.Substring(0, found);
         static string link_ports = Application.StartupPath + "\\ports.txt";
@@ -37,7 +38,6 @@ namespace WindowsFormsApp5
         static Dictionary<string, string> ReadAndSplitFile(string filePath)
         {
             Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
-
             try
             {
                 using (StreamReader reader = new StreamReader(filePath))
@@ -165,13 +165,34 @@ namespace WindowsFormsApp5
                         Parallel.ForEach(PortScanHelper.GetAllPorts(), async port =>
                         {
                             bool isOpen = await PortScanHelper.IsPortOpen(ipAdress, port);
-                            string result = ipAdress + "/" + port + "/" + $"{(isOpen ? "Открыт" : "Закрыт")}" + "/";
+                            string result = "";
+                            if (checkBox1.Checked)
+                            {
+                                result = ipAdress + "/" + port + "/" + $"{(isOpen ? "Открыт" : "Не активен")}" + "/";
+                            }
+                            else
+                            {
+                                if (isOpen)
+                                    result = ipAdress + "/" + port + "/" + "Открыт" + "/";
+                            }
                             string key = port.ToString();
                             Invoke(new Action(() =>
                             {
-                                if (ports_list.ContainsKey(key))
-                                    resText.AppendText(result + ports_list[port.ToString()] + Environment.NewLine);
-                                else resText.AppendText(result + "Неизвестно" + Environment.NewLine);
+                                if (checkBox1.Checked)
+                                {
+                                    if (ports_list.ContainsKey(key))
+                                        resText.AppendText(result + ports_list[port.ToString()] + Environment.NewLine);
+                                    else resText.AppendText(result + "Не назначен" + Environment.NewLine);
+                                }
+                                else
+                                {
+                                    if (isOpen)
+                                    {
+                                        if (ports_list.ContainsKey(key))
+                                            resText.AppendText(result + ports_list[port.ToString()] + Environment.NewLine);
+                                        else resText.AppendText(result + "Не назначен" + Environment.NewLine);
+                                    }
+                                }
                             }));
                         });
                     });
@@ -257,14 +278,13 @@ namespace WindowsFormsApp5
 
         private void button4_Click(object sender, EventArgs e)
         {
-
             GetInstalled();
             StreamWriter sw1 = new StreamWriter(in_inf);
             sw1.WriteLine(textBox1.Text);
             sw1.Close();
             StreamReader sr = new StreamReader(in_inf);
             StreamReader sr1 = new StreamReader(progs_inf);
-            StreamWriter sw2 = new StreamWriter(out_inf);
+            StreamWriter sw2 = File.AppendText(out_inf);
             string line;
             string line1;
             while ((line = sr.ReadLine()) != null)
@@ -275,24 +295,15 @@ namespace WindowsFormsApp5
                     string tocheck = t.Split('}')[0];
                     if (tocheck.Contains(line.Split('/')[0]))
                     {
-                        sw2.WriteLine(tocheck + "/" + line.Split('/')[1]);
+                        sw2.WriteLine(System.Environment.MachineName + "/" + tocheck + "/" + line.Split('/')[1]);
+                        textBox2.AppendText(System.Environment.MachineName + "/" + tocheck + "/" + line.Split('/')[1] + Environment.NewLine);
                     }
                 }
                 sr1.BaseStream.Position = 0;
             }
+            sw2.Close();
             sr.Close();
             sr1.Close();
-            sw2.Close();
-            if (File.Exists(out_inf))
-            {
-                StreamReader sr2 = new StreamReader(out_inf);
-                string lines;
-                while((lines = sr2.ReadLine()) != null)
-                {
-                    textBox2.AppendText(lines + Environment.NewLine);
-                }
-                sr2.Close();
-            }
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -334,7 +345,7 @@ namespace WindowsFormsApp5
         private void button7_Click(object sender, EventArgs e)
         {
             if (trackBar2.Maximum > trackBar2.Value) trackBar2.Value++;
-            label5.Text = fthreeBytes + "." + trackBar2.Value.ToString();
+            label5.Text = fthreeBytes + trackBar2.Value.ToString();
             trackBar2.Minimum = trackBar1.Value;
             trackBar1.Maximum = trackBar2.Value;
         }
@@ -343,6 +354,20 @@ namespace WindowsFormsApp5
         {
             label4.Text = fthreeBytes + "0";
             label5.Text = fthreeBytes + "255";
+            StreamReader sr = new StreamReader(starter_pack);
+            string line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                textBox1.AppendText(line + Environment.NewLine);
+            }
+            sr.Close();
+            StreamReader sr1 = new StreamReader(out_inf);
+            while ((line = sr1.ReadLine()) != null)
+            {
+                textBox2.AppendText(line + Environment.NewLine);
+            }
+            sr1.Close();
+            textBox1.Text = textBox1.Text.Remove(textBox1.Text.LastIndexOf(Environment.NewLine));
         }
 
         private void button9_Click(object sender, EventArgs e)
@@ -369,10 +394,17 @@ namespace WindowsFormsApp5
                 tbl.Rows[i + 2].Cells[1].Range.Text = (i + 1).ToString();
                 tbl.Rows[i + 2].Cells[2].Range.Text = textBox2.Lines[i].ToString().Split('/')[0];
                 tbl.Rows[i + 2].Cells[3].Range.Text = textBox2.Lines[i].ToString().Split('/')[1];
-
+                tbl.Rows[i + 2].Cells[4].Range.Text = textBox2.Lines[i].ToString().Split('/')[2];
             }
             app.ActiveDocument.Save();
             app.Visible = true;
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            textBox2.Clear();
+            File.Delete(Application.StartupPath + "\\CheckResult_ofprogs.txt");
+            File.Create(Application.StartupPath + "\\CheckResult_ofprogs.txt");
         }
     }
 }

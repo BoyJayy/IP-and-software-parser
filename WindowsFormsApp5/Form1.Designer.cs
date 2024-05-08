@@ -48,6 +48,9 @@
             this.resText = new System.Windows.Forms.TextBox();
             this.button9 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button10 = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
@@ -213,7 +216,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(143, 11);
+            this.progressBar1.Location = new System.Drawing.Point(117, 11);
             this.progressBar1.Maximum = 255;
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(249, 34);
@@ -242,7 +245,7 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(973, 578);
+            this.button9.Location = new System.Drawing.Point(933, 578);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(163, 39);
             this.button9.TabIndex = 46;
@@ -257,14 +260,50 @@
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(245, 512);
+            this.textBox2.Size = new System.Drawing.Size(360, 512);
             this.textBox2.TabIndex = 47;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(376, 28);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(179, 17);
+            this.checkBox1.TabIndex = 48;
+            this.checkBox1.Text = "Учитывать неактивные порты";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(1120, 578);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(163, 39);
+            this.button10.TabIndex = 49;
+            this.button10.Text = "Сбросить поиск";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label6.Location = new System.Drawing.Point(944, 9);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 20);
+            this.label6.TabIndex = 50;
+            this.label6.Text = "Result:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1203, 640);
+            this.ClientSize = new System.Drawing.Size(1298, 651);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.button10);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.label5);
@@ -287,7 +326,7 @@
             this.Controls.Add(this.resText);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "АС лог 1.0";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
@@ -318,6 +357,9 @@
         private System.Windows.Forms.TextBox resText;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Label label6;
     }
 }
 
